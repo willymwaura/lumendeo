@@ -19,7 +19,7 @@ RUN pip install --upgrade setuptools
 
 RUN pip install gunicorn
 RUN pip install Pillow
-#RUN pip install python-dotenv
+RUN pip install python-dotenv
 #RUN pip install django-storages[boto3]
 
 
