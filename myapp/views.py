@@ -102,6 +102,7 @@ def PaymentCallback(request):
 
         # Check if transaction state is complete
     if data["state"] == "COMPLETE"  and data["api_ref"] =="movie-payment":
+        print("json gottens is ",data)
         account = data["account"]  # Get the account information from data
 
         # Initialize phone and email variables with None
@@ -123,6 +124,7 @@ def PaymentCallback(request):
                 payment_instance = Payment.objects.filter(phone=phone).latest('id')
                 payment_instance.status = 'true'
                 payment_instance.save()
+                return JsonResponse({"message": "Payment processed successfully."})
 
                 
                 
