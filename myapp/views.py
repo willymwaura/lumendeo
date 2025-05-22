@@ -122,7 +122,7 @@ def PaymentCallback(request):
             # Process payments based on phone number
             try:
                 payment_instance = Payment.objects.filter(phone=phone).latest('id')
-                payment_instance.status = 'true'
+                payment_instance.status = 'True'
                 payment_instance.save()
                 return JsonResponse({"message": "Payment processed successfully."})
 
