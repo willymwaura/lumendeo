@@ -71,7 +71,7 @@ def mpesa_checkout(request):
     )
 
     try:
-        token = "ISSecretKey_test_18749af0-32b6-4ac8-b4e7-a45e2ad01fa8"
+        token = "ISSecretKey_test_70b2ae8a-1268-40b8-b2b6-c77972dd202c"
         pub = "ISPubKey_test_2331371f-6916-4d83-847f-75fa8db0b2cd"
         service = APIService(token=token, publishable_key=pub, test=True)
 
