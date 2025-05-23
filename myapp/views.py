@@ -143,5 +143,11 @@ def PaymentCallback(request):
 def checkpayment(request):
     return render(request,"payment.html")
 
+def loader(request):
+
+    return render(request,"loading.html")
+
+
+
 
 
