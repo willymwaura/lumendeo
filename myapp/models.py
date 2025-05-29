@@ -36,6 +36,7 @@ from myapp.models import MonthlyVideo  # adjust this import based on your app na
 
 class Payment(models.Model):
     phone = models.CharField(max_length=15)
+    name= models.CharField(max_length=100,default="user")
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     movie = models.ForeignKey(MonthlyVideo, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)

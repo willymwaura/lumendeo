@@ -22,7 +22,7 @@ def index(request):
     'latest_video': latest_video,  # Send only the latest video
     }
 
-    return render(request, 'index.html',context)
+    return render(request, 'newindex.html',context)
 def movie_view(request):
     movie= MonthlyVideo.objects.order_by('-id').first()
     
@@ -34,6 +34,7 @@ def movie_view(request):
 def mpesa_checkout(request):
     phone = request.POST.get('phone')
     amount = request.POST.get('amount')
+    name= request.POST.get('name') or 'user'
     print("movie amount is ",amount)
     #phone='254112100378'
     # Remove any spaces or dashes just in case
@@ -67,7 +68,8 @@ def mpesa_checkout(request):
     payment = Payment.objects.create(
         phone=phone,
         amount=amount,
-        movie=latest_movie
+        movie=latest_movie,
+        name=name
     )
 
     try:
