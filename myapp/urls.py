@@ -8,7 +8,8 @@ urlpatterns = [
     path('paymentProcessing',views.PaymentCallback,name='paymentProcessing'),
     path('movie', views.movie_view, name='movie'),
     path('checkpayments',views.checkpayment,name='checkpayments'),
-    path('loading',views.loader,name='loader')
+    path('loading',views.loader,name='loader'),
+    path('dashboard',views.dashboard,name='dashboard')
    
    
 ]

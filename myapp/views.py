@@ -149,6 +149,9 @@ def loader(request):
 
     return render(request,"loading.html")
 
+def dashboard(request):
+    return render(request,"dashboard.html")
+
 
 
 
