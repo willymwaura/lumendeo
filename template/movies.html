@@ -13,22 +13,27 @@
             background-color: black;
         }
 
-        iframe {
+        video {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            border: none;
+            object-fit: cover;
+            background-color: black;
         }
     </style>
 </head>
 <body>
-    <iframe 
-        src="https://www.youtube.com/embed/{{ movie.video_url|slice:'-11:' }}?autoplay=1&rel=0"
-        title="YouTube video player"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-    </iframe>
+    <video 
+        src="{{ movie.video.url }}" 
+        controls 
+        autoplay 
+        preload="auto"
+        poster="{{ movie.thumbnail.url }}" 
+        title="{{ movie.title }}">
+        Your browser does not support the video tag.
+    </video>
 </body>
 </html>
+
