@@ -9,10 +9,17 @@ from django.utils import timezone
 def default_expire_date():
     return timezone.now() + timedelta(days=30)
 
+from django.db import models
+from datetime import timedelta
+from django.utils import timezone
+
+def default_expire_date():
+    return timezone.now() + timedelta(days=30)
+
 class MonthlyVideo(models.Model):
     title = models.CharField(max_length=255)
-    video_url = models.URLField()
-    trailer_url = models.URLField()
+    video = models.FileField(upload_to='videos/')
+    trailer = models.FileField(upload_to='trailers/')
     thumbnail = models.ImageField(upload_to='thumbnails/')
     year_published = models.PositiveIntegerField()
     introduction = models.TextField()
@@ -22,6 +29,10 @@ class MonthlyVideo(models.Model):
     theme = models.CharField(max_length=150)
     length = models.CharField(max_length=150, default='2.0')
     movie_type = models.CharField(max_length=150, default='drama')
+
+    def __str__(self):
+        return self.title
+
 
     def is_expired(self):
         return timezone.now() > self.expire_date

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'storages',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -141,11 +141,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS S3 settings
-'''
-AWS_ACCESS_KEY_ID = 'AKIA3KURDNGMT5SGQVHX'
-AWS_SECRET_ACCESS_KEY = 'VsaELLJKMTwGQkVU8GiZEtzZwiMgYsf5UyCwt8Vb'
-AWS_STORAGE_BUCKET_NAME = 'mybackupdbwilly'
-AWS_S3_REGION_NAME = 'us-east-2'  # E.g., 'us-east-1'
+
+AWS_ACCESS_KEY_ID = 'AKIA3EQ3LS2YIFVNU5EA'
+AWS_SECRET_ACCESS_KEY = 'QKHoRu0EJQDEBFcAz7bqW9jxIzHXhUB3PyxLZgXz'
+AWS_STORAGE_BUCKET_NAME = 'my-django-media-buckets'
+AWS_S3_REGION_NAME = 'eu-north-1'  # E.g., 'us-east-1'
 
 
 # Tell Django to use S3 for file storage
@@ -158,5 +158,8 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 # Media settings
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'  '''
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+
+# Allow up to 5 GB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10* 1024 * 1024 * 1024  # 5 GB in bytes
 
