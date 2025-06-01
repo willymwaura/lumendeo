@@ -175,8 +175,8 @@ def get_presigned_url(request):
     presigned_post = s3.generate_presigned_post(
         Bucket=settings.AWS_STORAGE_BUCKET_NAME,
         Key=filename,
-        Fields={"acl": "public-read"},
-        Conditions=[{"acl": "public-read"}],
+        Fields={"Content-Type": file_type},
+        Conditions=[{"Content-Type": file_type}],
         ExpiresIn=3600
     )
 
