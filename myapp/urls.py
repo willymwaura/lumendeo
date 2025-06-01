@@ -1,5 +1,6 @@
 from django.urls import path
 from.import views
+from .views import get_presigned_url
 
 urlpatterns = [
     path('',views.index,name='index'),
@@ -9,7 +10,8 @@ urlpatterns = [
     path('movie', views.movie_view, name='movie'),
     path('checkpayments',views.checkpayment,name='checkpayments'),
     path('loading',views.loader,name='loader'),
-    path('dashboard',views.dashboard,name='dashboard')
+    path('dashboard',views.dashboard,name='dashboard'),
+    path('api/upload-url/', get_presigned_url, name='get_presigned_url'),
    
    
 ]

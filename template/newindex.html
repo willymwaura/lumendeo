@@ -696,7 +696,7 @@
                 const watchFullBtn = document.getElementById('watchFullMovieBtn');
                 
                 // Replace with your actual YouTube embed URL (must be from youtube.com/embed)
-                videoPlayer.src = "{{ latest_video.trailer.url}}";
+                videoPlayer.src = "{{ latest_video.trailer}}";
                 thumbnail.src="{{ latest_video.thumbnail.url }}";
                 thumbnail.style.opacity = '0';
                 

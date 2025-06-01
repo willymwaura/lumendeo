@@ -154,5 +154,35 @@ def dashboard(request):
 
 
 
+import uuid
+import boto3
+from django.conf import settings
+from django.http import JsonResponse
+import mimetypes
 
+def get_presigned_url(request):
+    file_type = request.GET.get('content_type', 'video/mp4')
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME
+    )
+
+    ext = mimetypes.guess_extension(file_type)
+    filename = f"videos/{uuid.uuid4()}{ext or '.mp4'}"
+
+    presigned_post = s3.generate_presigned_post(
+        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+        Key=filename,
+        Fields={"acl": "public-read"},
+        Conditions=[{"acl": "public-read"}],
+        ExpiresIn=3600
+    )
+
+    return JsonResponse({
+        'url': presigned_post['url'],
+        'fields': presigned_post['fields'],
+        'final_url': f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{filename}"
+    })
 

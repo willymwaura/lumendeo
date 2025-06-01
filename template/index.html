@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         videoContainer.style.display = 'block';
         
         // Start playing video
-        youtubeVideo.src = "{{ latest_video.trailer_url}}";
+        youtubeVideo.src = "{{ latest_video.trailer}}";
         
         // Check for video end every second
         const checkEnd = setInterval(function() {
