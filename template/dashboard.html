@@ -557,7 +557,7 @@
         <aside class="sidebar">
             <div class="logo-container">
                 <div class="logo">
-                    <span>Lumen</span>Deo
+                    <span></span>
                 </div>
             </div>
             
@@ -599,15 +599,17 @@
                     </a>
                 </li>
             </ul>
+               
         </aside>
+ 
 
         <!-- Main Content Area -->
         <main class="main-content">
             <!-- Header -->
             <header class="header">
                 <div class="welcome-message">
-                    <h1>Welcome to Admin Dashboard</h1>
-                    <p>Last login: Today at 10:30 AM</p>
+                    <h1>Welcome to Lumendeo Admin Dashboard</h1>
+                   
                 </div>
                 
                 <div class="header-actions">
@@ -628,91 +630,84 @@
             </header>
 
             <!-- Dashboard Content Sections -->
-            <div class="dashboard-sections">
-                <!-- Dashboard Overview -->
-                <section id="dashboard-overview" class="dashboard-section active">
-                    <h2 class="section-title">Dashboard Overview</h2>
-                    <div class="card-grid">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Total Users</h3>
-                                <div class="card-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                            </div>
-                            <div class="card-value">1,248</div>
-                            <div class="card-growth">+12.5% from last month</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Content Items</h3>
-                                <div class="card-icon">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                            </div>
-                            <div class="card-value">356</div>
-                            <div class="card-growth">+5.3% from last month</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Active Sessions</h3>
-                                <div class="card-icon">
-                                    <i class="fas fa-signal"></i>
-                                </div>
-                            </div>
-                            <div class="card-value">84</div>
-                            <div class="card-growth negative">-2.1% from last month</div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Revenue</h3>
-                                <div class="card-icon">
-                                    <i class="fas fa-dollar-sign"></i>
-                                </div>
-                            </div>
-                            <div class="card-value">$3,845</div>
-                            <div class="card-growth">+24.7% from last month</div>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container">
-                        <h3 class="section-subtitle">Recent Activity</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Item</th>
-                                    <th>Time</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>admin@example.com</td>
-                                    <td>Updated content</td>
-                                    <td>Homepage banner</td>
-                                    <td>10 min ago</td>
-                                    <td><span class="status active">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>user123@example.com</td>
-                                    <td>Account creation</td>
-                                    <td>New user</td>
-                                    <td>25 min ago</td>
-                                    <td><span class="status active">Completed</span></td>
-                                </tr>
-                                <tr>
-                                    <td>system</td>
-                                    <td>Backup</td>
-                                    <td>Database</td>
-                                    <td>1 hour ago</td>
-                                    <td><span class="status pending">In Progress</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+<div class="dashboard-sections">
+  <!-- Dashboard Overview -->
+  <section id="dashboard-overview" class="dashboard-section active">
+    <h2 class="section-title">Dashboard Overview</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Total Users</h3>
+          <div class="card-icon"><i class="fas fa-users"></i></div>
+        </div>
+        <div class="card-value">{{ total_users }}</div>
+        <div class="card-growth">+12.5% from last month</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Content Items</h3>
+          <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+        </div>
+        <div class="card-value">{{ total_content_items }}</div>
+        <div class="card-growth">+5.3% from last month</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Active Sessions</h3>
+          <div class="card-icon"><i class="fas fa-signal"></i></div>
+        </div>
+        <div class="card-value">{{ active_sessions }}</div>
+        <div class="card-growth negative">-2.1% from last month</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Revenue</h3>
+          <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+        </div>
+        <div class="card-value">Kshs{{ total_revenue }}</div>
+        <div class="card-growth">+24.7% from last month</div>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <h3 class="section-subtitle">Recent Activity</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Item</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for activity in recent_activity %}
+          <tr>
+            <td>{{ activity.name }}</td>
+            <td>Purchased</td>
+            <td>{{ activity.movie.title }}</td>
+            <td>{{ activity.timestamp|timesince }} ago</td>
+            <td>
+              {% if activity.status %}
+              <span class="status active">Completed</span>
+              {% else %}
+              <span class="status pending">Pending</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">No recent activity</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
 
                 <!-- Content Management -->
                 <section id="content-management" class="dashboard-section">

@@ -148,41 +148,190 @@ def checkpayment(request):
 def loader(request):
 
     return render(request,"loading.html")
-
+from django.db.models import Sum
 def dashboard(request):
-    return render(request,"dashboard.html")
+    total_users = Payment.objects.values('phone').distinct().count()
+    total_content_items = MonthlyVideo.objects.count()
+    total_revenue = Payment.objects.filter(status=True).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    # Get the latest uploaded movie
+    latest_movie = MonthlyVideo.objects.order_by('-date_uploaded').first()
+
+    # Count unique users who paid for the latest movie
+    active_sessions = 0
+    if latest_movie:
+        active_sessions = Payment.objects.filter(status=True, movie=latest_movie).values('phone').distinct().count()
+
+    recent_activity = Payment.objects.select_related('movie').order_by('-timestamp')[:5]
+
+    context = {
+        'total_users': total_users,
+        'total_content_items': total_content_items,
+        'active_sessions': active_sessions,
+        'total_revenue': total_revenue,
+        'recent_activity': recent_activity,
+    }
+    return render(request,"dashboard.html",context)
 
 
-
-import uuid
-import boto3
-from django.conf import settings
 from django.http import JsonResponse
-import mimetypes
+@csrf_exempt
+def create_video(request):
+    try:
+        # Extract fields from request
+        video_url = request.POST.get("video")
+        trailer_url = request.POST.get("trailer")
+        title = request.POST.get("title")
+        thumbnail = request.FILES.get("thumbnail")
+        year_published = request.POST.get("year_published")
+        introduction = request.POST.get("introduction")
+        expire_date = request.POST.get("expire_date")
+        cast = request.POST.get("cast")
+        theme = request.POST.get("theme")
+        length = request.POST.get("length", "2.0")
+        movie_type = request.POST.get("movie_type", "drama")
 
-def get_presigned_url(request):
-    file_type = request.GET.get('content_type', 'video/mp4')
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        region_name=settings.AWS_S3_REGION_NAME
+        # Validate required fields
+        if not all([video_url, trailer_url, title, thumbnail]):
+            return JsonResponse({"error": "Missing required fields."})
+
+        # Create MonthlyVideo instance
+        video = MonthlyVideo.objects.create(
+            title=title,
+            video=video_url,
+            trailer=trailer_url,
+            thumbnail=thumbnail,
+            year_published=year_published,
+            introduction=introduction,
+            expire_date=expire_date,
+            cast=cast,
+            theme=theme,
+            length=length,
+            movie_type=movie_type
+        )
+
+        # Return success response
+        return JsonResponse({"success": True, "id": video.id})
+
+    except Exception as e:
+        # Return error response on exception
+        return JsonResponse({"error": str(e)})
+
+
+
+import boto3
+import uuid
+import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.views.decorators.http import require_POST
+
+# Initialize S3 client
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+    region_name=settings.AWS_REGION
+)
+
+@csrf_exempt
+@require_POST
+def create_multipart_upload(request):
+    body = json.loads(request.body)
+    file_name = body.get('file_name')
+    content_type = body.get('content_type')
+
+    print("⏳ Starting multipart upload...")
+    print(f"📁 Received file name: {file_name}")
+    print(f"📦 Content type: {content_type}")
+
+    if not file_name or not content_type:
+        print("❌ Missing parameters.")
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+
+    key = f"uploads/{uuid.uuid4()}_{file_name}"
+    print(f"🔑 Generated S3 key: {key}")
+
+    response = s3_client.create_multipart_upload(
+        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+        Key=key,
+        ContentType=content_type
     )
 
-    ext = mimetypes.guess_extension(file_type)
-    filename = f"videos/{uuid.uuid4()}{ext or '.mp4'}"
+    print("✅ Multipart upload initiated.")
+    print(f"🆔 Upload ID: {response['UploadId']}")
 
-    presigned_post = s3.generate_presigned_post(
-        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
-        Key=filename,
-        Fields={"Content-Type": file_type},
-        Conditions=[{"Content-Type": file_type}],
+    return JsonResponse({
+        'upload_id': response['UploadId'],
+        'key': key
+    })
+
+
+@csrf_exempt
+@require_POST
+def generate_presigned_url(request):
+    body = json.loads(request.body)
+    upload_id = body.get('upload_id')
+    key = body.get('key')
+    part_number = body.get('part_number')
+
+    print("🔗 Generating presigned URL...")
+    print(f"🆔 Upload ID: {upload_id}")
+    print(f"🔑 Key: {key}")
+    print(f"🔢 Part number: {part_number}")
+
+    if not upload_id or not key or not part_number:
+        print("❌ Missing parameters.")
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+
+    url = s3_client.generate_presigned_url(
+        'upload_part',
+        Params={
+            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+            'Key': key,
+            'UploadId': upload_id,
+            'PartNumber': int(part_number)
+        },
         ExpiresIn=3600
     )
 
-    return JsonResponse({
-        'url': presigned_post['url'],
-        'fields': presigned_post['fields'],
-        'final_url': f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{filename}"
-    })
+    print("✅ Presigned URL generated.")
+    return JsonResponse({'url': url})
 
+
+@csrf_exempt
+@require_POST
+def complete_multipart_upload(request):
+    body = json.loads(request.body)
+    upload_id = body.get('upload_id')
+    key = body.get('key')
+    parts = body.get('parts')
+
+    print("🧩 Completing multipart upload...")
+    print(f"🆔 Upload ID: {upload_id}")
+    print(f"🔑 Key: {key}")
+    print(f"📚 Parts received: {parts}")
+
+    if not upload_id or not key or not parts:
+        print("❌ Missing parameters.")
+        return JsonResponse({'error': 'Missing parameters'}, status=400)
+
+    response = s3_client.complete_multipart_upload(
+        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+        Key=key,
+        UploadId=upload_id,
+        MultipartUpload={
+            'Parts': parts
+        }
+    )
+
+    print("✅ Multipart upload completed.")
+    print(f"📂 Final S3 URL: {response['Location']}")
+
+    return JsonResponse({'file_url': response['Location']})
+
+
+
+def upload_video(request):
+    return render(request,"newvideo.html")

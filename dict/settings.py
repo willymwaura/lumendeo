@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pwa',
     'storages',
 ]
 
@@ -145,7 +146,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_ACCESS_KEY_ID = 'AKIA3EQ3LS2YIFVNU5EA'
 AWS_SECRET_ACCESS_KEY = 'QKHoRu0EJQDEBFcAz7bqW9jxIzHXhUB3PyxLZgXz'
 AWS_STORAGE_BUCKET_NAME = 'my-django-media-buckets'
-AWS_S3_REGION_NAME = 'eu-north-1'  # E.g., 'us-east-1'
+AWS_REGION = 'eu-north-1'  # E.g., 'us-east-1'
 
 
 # Tell Django to use S3 for file storage
@@ -163,3 +164,34 @@ MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
 # Allow up to 5 GB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10* 1024 * 1024 * 1024  # 5 GB in bytes
 
+PWA_APP_NAME = 'LUMENDEO tv'
+PWA_APP_DESCRIPTION = "A Christian based movie site"
+PWA_APP_THEME_COLOR = '#000000'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/img/web-app-manifest-192x192.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/img/web-app-manifest-512x512.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+{
+        'src': '/static/img/web-app-manifest-192x192.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/img/web-app-manifest-512x512.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'

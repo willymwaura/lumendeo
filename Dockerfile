@@ -21,6 +21,8 @@ RUN pip install gunicorn
 RUN pip install Pillow
 RUN pip install python-dotenv
 RUN pip install django-storages[boto3]
+RUN pip install django-pwa
+
 
 
 
