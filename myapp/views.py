@@ -16,19 +16,60 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
+
 def index(request):
     latest_video = MonthlyVideo.objects.order_by('-id').first()
-    context = {  
-    'latest_video': latest_video,  # Send only the latest video
-    }
 
-    return render(request, 'newindex.html',context)
+    if latest_video:
+        # Replace S3 domain with CloudFront domain
+        print("Original trailer URL:", latest_video.thumbnail.url)
+
+        s3_domain = "my-django-media-buckets.s3.eu-north-1.amazonaws.com"
+        cloudfront_domain = "d1mtywqd95vacd.cloudfront.net"          # Replace with your CloudFront domain
+
+        # Replace in trailer and video
+        trailer_url = latest_video.trailer.replace(s3_domain, cloudfront_domain)
+        s3_domain = "my-django-media-buckets.s3.amazonaws.com"
+     
+        thumbnail_url = latest_video.thumbnail.url.replace(s3_domain, cloudfront_domain)
+        print( thumbnail_url)
+        
+    else:
+        trailer_url = ""
+      
+
+    context = {  
+        'latest_video': latest_video,
+        'trailer_url': trailer_url,
+        'thumbnail_url':thumbnail_url 
+       
+    }
+    return render(request, 'newindex.html', context)
+
 def movie_view(request):
     movie= MonthlyVideo.objects.order_by('-id').first()
     
     if not movie:
         return render(request, "index.html", {"error": "No movie found."})
-    return render(request, "movies.html", {"movie": movie})
+    
+    if movie:
+        # Replace S3 domain with CloudFront domain
+        s3_domain = "my-django-media-buckets.s3.eu-north-1.amazonaws.com"            # Replace with actual S3 domain
+        cloudfront_domain = "d1mtywqd95vacd.cloudfront.net"          # Replace with your CloudFront domain
+
+        # Replace in trailer and video
+        
+        video_url = movie.video.replace(s3_domain, cloudfront_domain)
+        s3_domain = "my-django-media-buckets.s3.amazonaws.com"
+        thumbnail_url = movie.thumbnail.url.replace(s3_domain, cloudfront_domain)
+        
+    context = {  
+        'movie': movie,
+        'thumbnail_url ':thumbnail_url ,
+       
+        'video_url': video_url,
+    }
+    return render(request, "movies.html", context)
 
 
 def mpesa_checkout(request):
