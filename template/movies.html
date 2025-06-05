@@ -24,16 +24,53 @@
         }
     </style>
 </head>
-<body>
-    <video 
-        src="{{ video_url }}" 
-        controls 
-        autoplay 
+<body style="margin:0; padding:0; background:#000;">
+    <video
+        id="moviePlayer"
+        src="{{ video_url }}"
+        controls
+        autoplay
         preload="auto"
-        poster="{{thumbnail_url }}" 
-        title="{{ movie.title }}">
+        playsinline
+        poster="{{ thumbnail_url }}"
+        title="{{ movie.title }}"
+        style="width: 100%; height: auto; max-height: 100vh; background: #000;"
+        controlsList="nodownload"
+    >
         Your browser does not support the video tag.
     </video>
+
+    <script>
+        const video = document.getElementById('moviePlayer');
+
+        // Request fullscreen and landscape orientation on play (mobile)
+        video.addEventListener('play', async () => {
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    await video.requestFullscreen();
+                    await screen.orientation.lock('landscape');
+                } else if (video.requestFullscreen) {
+                    await video.requestFullscreen();
+                }
+            } catch (err) {
+                console.warn('Orientation lock or fullscreen not supported:', err);
+            }
+        });
+
+        // Exit fullscreen and unlock orientation on pause or end
+        const unlockOrientation = () => {
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        };
+
+        video.addEventListener('pause', unlockOrientation);
+        video.addEventListener('ended', unlockOrientation);
+    </script>
 </body>
+
 </html>
 

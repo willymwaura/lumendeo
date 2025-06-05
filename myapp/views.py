@@ -376,3 +376,5 @@ def complete_multipart_upload(request):
 
 def upload_video(request):
     return render(request,"newvideo.html")
+
+

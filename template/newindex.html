@@ -604,8 +604,8 @@
                 height: 450px;
                 background-image: url('{{thumbnail_url }}');
                 background-repeat: no-repeat;
-                background-position: center center;
-                background-size: cover;
+                background-position: center;
+                background-size: contain;
                 background-color: #222;  /* fallback */
                 border-radius: 8px;
              ">
@@ -760,7 +760,7 @@
                         watchFullBtn.style.display = 'block';
                     }, 1000);
                 }, 500);
-            }, 5000); // Changed to 10 seconds delay
+            }, 15000); // Changed to 10 seconds delay
         }
 
         // Payment Modal Functions

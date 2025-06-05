@@ -170,6 +170,90 @@ button[type="submit"]:hover {
         border-left: 2px solid #d4af37;
     }
 }
+/* Existing mobile responsiveness (extended) */
+@media (max-width: 576px) {
+    .modal-content {
+        padding: 20px 15px;
+        max-height: 95vh;
+    }
+
+    .modal-body h3 {
+        font-size: 1.4rem;
+    }
+
+    .payment-amount p {
+        font-size: 0.85rem;
+    }
+
+    .payment-amount h4 {
+        font-size: 1.1rem;
+    }
+
+    .form-group label,
+    .form-group input,
+    button[type="submit"] {
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        padding: 10px;
+    }
+
+    button[type="submit"] {
+        padding: 10px;
+    }
+
+    .payment-tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .tab-btn {
+        text-align: left;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .tab-btn.active {
+        border-left: 3px solid #d4af37;
+        border-bottom: none;
+    }
+
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+    }
+
+    .secure-msg {
+        font-size: 0.75rem;
+    }
+}
+
+/* For ultra-small devices (<=400px) */
+@media (max-width: 400px) {
+    .modal-body h3 {
+        font-size: 1.2rem;
+    }
+
+    .form-group input {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    button[type="submit"] {
+        font-size: 0.85rem;
+    }
+
+    .tab-btn {
+        font-size: 0.85rem;
+    }
+
+    .secure-msg {
+        font-size: 0.7rem;
+    }
+}
+
 
     </style>
 </head>
@@ -189,7 +273,7 @@ button[type="submit"]:hover {
             <div class="payment-options">
                 <div class="payment-tabs">
                     <button class="tab-btn active" data-tab="mpesa">M-Pesa</button>
-                    <button class="tab-btn" data-tab="card">Card</button>
+                 
                 </div>
                 <div id="mpesa-tab" class="tab-content" style="display: block;">
                     <form id="mpesa-form" method="POST" action="{% url 'mpesa_checkout' %}">
