@@ -74,7 +74,7 @@ def test(request):
     }
     return render(request, 'test.html', context)
    
-
+'''
 def index(request):
     latest_video = MonthlyVideo.objects.order_by('-id').first()
 
@@ -102,7 +102,7 @@ def index(request):
         'thumbnail_url':thumbnail_url 
        
     }
-    return render(request, 'newindex.html', context)
+    return render(request, 'newindex.html', context) '''''
 
 def movie_view(request):
     movie= MonthlyVideo.objects.order_by('-id').first()

@@ -5,8 +5,8 @@ from.import views
 
 
 urlpatterns = [
-    path('',views.index,name='index'),
-    path('index',views.index,name='index'),
+    path('',views.test,name='test'),
+    #path('index',views.index,name='index'),
     path('mpesa_checkout',views.mpesa_checkout,name='mpesa_checkout'),
     path('paymentProcessing',views.PaymentCallback,name='paymentProcessing'),
     path('movie', views.movie_view, name='movie'),
@@ -19,7 +19,7 @@ path('api/complete-upload/', views.complete_multipart_upload, name='complete_upl
 
     path('upload-video/', views.upload_video, name='upload_video'),
         path('api/create-video/', views.create_video, name='create_video'),
-        path('test',views.test,name='test'),
+        path('index',views.test,name='test'),
           path('check-payment-status/', views.check_payment_status, name='check_payment_status'),
 
 ]
