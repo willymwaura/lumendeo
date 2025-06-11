@@ -19,6 +19,8 @@ path('api/complete-upload/', views.complete_multipart_upload, name='complete_upl
 
     path('upload-video/', views.upload_video, name='upload_video'),
         path('api/create-video/', views.create_video, name='create_video'),
+        path('test',views.test,name='test'),
+          path('check-payment-status/', views.check_payment_status, name='check_payment_status'),
 
 ]
    

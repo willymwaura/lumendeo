@@ -13,9 +13,67 @@ from .models import Payment, MonthlyVideo
    
 from django.views.decorators.csrf import csrf_exempt
 
+def check_payment_status(request):
+    phone = request.session.get('phone')
+    if not phone:
+        return JsonResponse({'status': 'error', 'message': 'No phone in session'}, status=400)
+
+    latest_movie = MonthlyVideo.objects.order_by('-id').first()
+    if not latest_movie:
+        return render(request, "index.html", {"error": "No movie available."})
+
+    
+
+    # Check for recent successful payment
+    existing_payment = Payment.objects.filter(
+        phone=phone,
+        movie=latest_movie,
+        status=True
+    ).order_by('-timestamp').first()
+
+    if existing_payment:
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'pending'})
+
+
+
 
 # Create your views here.
+def test(request):
+    latest_video = MonthlyVideo.objects.order_by('-id').first()
 
+    if latest_video:
+        # Replace S3 domain with CloudFront domain
+        print("Original trailer URL:", latest_video.thumbnail.url)
+
+        s3_domain = "my-django-media-buckets.s3.eu-north-1.amazonaws.com"
+        cloudfront_domain = "d1mtywqd95vacd.cloudfront.net"          # Replace with your CloudFront domain
+
+        # Replace in trailer and video
+        trailer_url = latest_video.trailer.replace(s3_domain, cloudfront_domain)
+        s3_domain = "my-django-media-buckets.s3.amazonaws.com"
+     
+        thumbnail_url = latest_video.thumbnail.url.replace(s3_domain, cloudfront_domain)
+        print( thumbnail_url)
+
+        introduction=latest_video.introduction.split()
+        intro_chunks = [' '.join(introduction[i:i+6]) for i in range(0, len(introduction), 6)]
+    
+        
+    else:
+        trailer_url = ""
+      
+
+    context = {  
+        'latest_video': latest_video,
+        'trailer_url': trailer_url,
+        'thumbnail_url':thumbnail_url ,
+        'intro_chunks':intro_chunks
+       
+    }
+    return render(request, 'test.html', context)
+   
 
 def index(request):
     latest_video = MonthlyVideo.objects.order_by('-id').first()
@@ -86,8 +144,10 @@ def mpesa_checkout(request):
         phone = "254" + cleaned_phone[1:]
     else:
         phone = cleaned_phone
+    
     if not phone:
-        return redirect('index')  # or handle error gracefully
+        return redirect('index') 
+    request.session['phone'] = phone
 
     latest_movie = MonthlyVideo.objects.order_by('-id').first()
     if not latest_movie:
