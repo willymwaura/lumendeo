@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ movie.title }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="{{ movie.description|default:'Watch our featured video of the month.' }}">
     <meta property="og:title" content="{{ movie.title }}">
     <meta property="og:image" content="{{ thumbnail_url }}">
@@ -31,37 +31,39 @@
 </head>
 <body>
 
-    <video
-        id="moviePlayer"
-        src="{{ video_url }}"
-        controls
-        autoplay
-        preload="auto"
-        playsinline
-        poster="{{ thumbnail_url }}"
-        aria-label="Video player: {{ movie.title }}"
-        title="{{ movie.title }}"
-        tabindex="0"
-        controlsList="nodownload noremoteplayback"
+<video
+    id="moviePlayer"
+    src="{{ video_url }}"
+    controls
+    autoplay
+    preload="auto"
+    playsinline
+    poster="{{ thumbnail_url }}"
+    aria-label="Video player: {{ movie.title }}"
+    title="{{ movie.title }}"
+    tabindex="0"
+    controlsList="nodownload noremoteplayback"
+/>
+    Your browser does not support the video tag.
+</video>
 
-    >
-        Your browser does not support the video tag.
-    </video>
-
-    <script>
+<script>
     const video = document.getElementById('moviePlayer');
     let hasEnteredFullscreen = false;
 
-    video.addEventListener('play', async () => {
-        if (!hasEnteredFullscreen) {
-            hasEnteredFullscreen = true;
+    function isMobile() {
+        return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    }
 
+    video.addEventListener('play', async () => {
+        if (!hasEnteredFullscreen && isMobile()) {
+            hasEnteredFullscreen = true;
             try {
                 if (video.requestFullscreen) {
                     await video.requestFullscreen();
                 }
 
-                if (screen.orientation?.lock) {
+                if (screen.orientation && screen.orientation.lock) {
                     await screen.orientation.lock('landscape');
                 }
             } catch (err) {
@@ -74,16 +76,16 @@
         if (screen.orientation?.unlock) {
             screen.orientation.unlock();
         }
-
         if (document.fullscreenElement) {
             document.exitFullscreen();
         }
     };
 
+    // Optional: Unlock orientation on pause or end
     video.addEventListener('pause', unlockOrientation);
     video.addEventListener('ended', unlockOrientation);
 
-    // Detect user-initiated exit from fullscreen
+    // Reset flag if user exits fullscreen manually
     document.addEventListener('fullscreenchange', () => {
         if (!document.fullscreenElement) {
             hasEnteredFullscreen = false;
@@ -91,8 +93,8 @@
     });
 </script>
 
-
 </body>
 </html>
+
 
 
