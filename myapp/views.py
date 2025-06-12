@@ -129,7 +129,7 @@ def movie_view(request):
     }
     return render(request, "movies.html", context)
 
-
+@csrf_exempt
 def mpesa_checkout(request):
     phone = request.POST.get('phone')
     amount = request.POST.get('amount')
