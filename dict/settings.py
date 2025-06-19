@@ -27,8 +27,8 @@ SECRET_KEY = 'django-insecure-63q9h(znz#1e)m&74w9#_n5nakdb!qx*fqhfi=&k7e3bwmaia$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['lumendeo-production.up.railway.app','127.0.0.1']
-CSRF_TRUSTED_ORIGINS=['https://lumendeo-production.up.railway.app','https://127.0.0.1']
+ALLOWED_HOSTS = ['lumendeo-production.up.railway.app','127.0.0.1','lumendeo.tv']
+CSRF_TRUSTED_ORIGINS=['https://lumendeo-production.up.railway.app','https://127.0.0.1','https://lumendeo.tv']
 
 
 # Application definition
