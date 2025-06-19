@@ -10,7 +10,7 @@ from intasend import APIService
 import json
 from django.shortcuts import render, redirect
 from .models import Payment, MonthlyVideo
-   
+import requests
 from django.views.decorators.csrf import csrf_exempt
 
 def check_payment_status(request):
@@ -133,29 +133,25 @@ def movie_view(request):
 def mpesa_checkout(request):
     phone = request.POST.get('phone')
     amount = request.POST.get('amount')
-    name= request.POST.get('name') or 'user'
-    print("movie amount is ",amount)
-    #phone='254112100378'
-    # Remove any spaces or dashes just in case
-    cleaned_phone = phone.strip().replace(" ", "").replace("-", "")
+    name = request.POST.get('name') or 'user'
 
-    # Convert to international format
+    print("mpesa prompted by ",name,"for amount",amount,"phone number",phone)
+
+    cleaned_phone = phone.strip().replace(" ", "").replace("-", "")
     if cleaned_phone.startswith("0"):
-        phone = "254" + cleaned_phone[1:]
+        phone = "+254" + cleaned_phone[1:]
     else:
         phone = cleaned_phone
-    
+
     if not phone:
-        return redirect('index') 
+        return redirect('index')
+
     request.session['phone'] = phone
 
     latest_movie = MonthlyVideo.objects.order_by('-id').first()
     if not latest_movie:
         return render(request, "index.html", {"error": "No movie available."})
 
-    
-
-    # Check for recent successful payment
     existing_payment = Payment.objects.filter(
         phone=phone,
         movie=latest_movie,
@@ -163,9 +159,8 @@ def mpesa_checkout(request):
     ).order_by('-timestamp').first()
 
     if existing_payment:
-        return redirect('movie')  # to the movie page
+        return redirect('movie')
 
-    # No valid payment — initiate payment
     payment = Payment.objects.create(
         phone=phone,
         amount=amount,
@@ -173,20 +168,33 @@ def mpesa_checkout(request):
         name=name
     )
 
+    # ✅ Send request to Paystack
     try:
-        token = "ISSecretKey_test_70b2ae8a-1268-40b8-b2b6-c77972dd202c"
-        pub = "ISPubKey_test_2331371f-6916-4d83-847f-75fa8db0b2cd"
-        service = APIService(token=token, publishable_key=pub, test=True)
+        url = "https://api.paystack.co/charge"
+        headers = {
+            "Authorization": "Bearer sk_live_fc4f550a27a942bc0f6ce014c57b1834c4b6195d",  # Replace with your actual secret key
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "amount": int(1000),  # amount in base units (e.g. 100 KES = 10000 if Paystack expects kobo-like units, check this)
+            "email": f"{phone}@example.com",  # required field; dummy if not available
+            "currency": "KES",
+            "mobile_money": {
+                "phone": phone,
+                "provider": "mpesa"
+            }
+        }
 
-        response = service.collect.mpesa_stk_push(
-            phone_number=phone,
-            narrative="Movie Payment",
-            amount=amount,
-            api_ref="movie-payment"
-        )
+        response = requests.post(url, headers=headers, json=payload)
+        result = response.json()
+        print("Paystack response:", result)
 
-        print(response)
-        return render(request, "loading.html")
+        # Optionally handle error or forward display_text
+        if result.get("status") is True:
+            display_text = result["data"].get("display_text", "Complete payment on your phone.")
+            return render(request, "loading.html", {"message": display_text})
+        else:
+            return render(request, "index.html", {"error": result.get("message", "Failed to initiate payment.")})
 
     except Exception as e:
         print("Payment error:", e)
@@ -194,52 +202,29 @@ def mpesa_checkout(request):
 
 
 
-@csrf_exempt  
+@csrf_exempt
 def PaymentCallback(request):
     try:
         data = json.loads(request.body)
+        print("Paystack Webhook:", data)
     except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON data in the request."}, status=400)
-    print(data)
-    
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
 
-        # Check if transaction state is complete
-    if data["state"] == "COMPLETE"  and data["api_ref"] =="movie-payment":
-        print("json gottens is ",data)
-        account = data["account"]  # Get the account information from data
-
-        # Initialize phone and email variables with None
-        phone = None
-        email = None
+    event = data.get("event")
+    if event == "charge.success":
+        ref = data["data"].get("reference")
+        email = data["data"].get("customer", {}).get("email", "")
+        phone = email.split("@")[0]  # Since we used phone@example.com format
 
         try:
-            int_account = int(account)  # Try converting account to an integer
-            phone = (int_account)    # Convert the integer to a character (assuming this is intended for phone number processing)
-            print(phone)
-        except ValueError:
-            # If account is not an integer, treat it as an email
-            email = account
-            print(email)
+            payment = Payment.objects.filter(phone=phone).latest('id')
+            payment.status = True
+            payment.save()
+            return JsonResponse({"message": "Payment processed successfully."})
+        except Payment.DoesNotExist:
+            return JsonResponse({"error": "Payment record not found"}, status=404)
 
-        if phone is not None:
-            # Process payments based on phone number
-            try:
-                payment_instance = Payment.objects.filter(phone=phone).latest('id')
-                payment_instance.status = 'True'
-                payment_instance.save()
-                return JsonResponse({"message": "Payment processed successfully."})
-
-                
-                
-                
-
-            except Payment.DoesNotExist:
-                return JsonResponse({"message": "No payment found for this phone number."})
-            
-        else:
-            return JsonResponse({"message": "No  phone number in the callback."})
-    else:
-        return JsonResponse({"message": "Payment not complete ."})
+    return JsonResponse({"message": "Event ignored"})
 
 
         
