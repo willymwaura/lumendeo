@@ -139,7 +139,7 @@ def mpesa_checkout(request):
 
     cleaned_phone = phone.strip().replace(" ", "").replace("-", "")
     if cleaned_phone.startswith("0"):
-        phone = "+254" + cleaned_phone[1:]
+        phone = "254" + cleaned_phone[1:]
     else:
         phone = cleaned_phone
 
@@ -180,7 +180,7 @@ def mpesa_checkout(request):
             "email": f"{phone}@example.com",  # required field; dummy if not available
             "currency": "KES",
             "mobile_money": {
-                "phone": phone,
+                "phone": "+"+phone,
                 "provider": "mpesa"
             }
         }
