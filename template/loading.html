@@ -448,11 +448,7 @@
             <div class="main-status" id="mainStatus">Processing Your Payment...</div>
             <div class="sub-status" id="subStatus">Connecting to M-Pesa servers...</div>
             
-            <div class="sandbox-notice">
-                <i class="fas fa-info-circle"></i>
-                This payment is in sandbox mode and not yet in production. 
-                This may take a few minutes to complete.
-            </div>
+          
             
             <div class="final-message" id="finalMessage">
                 We will authenticate you and you'll enjoy your video shortly!
@@ -698,7 +694,7 @@ function completePayment() {
                     clearInterval(statusInterval);
                     setTimeout(completePayment, 1000);
                 }
-            }, 15000);
+            }, 4000);
         });
 
         // Add smooth transitions to status elements
