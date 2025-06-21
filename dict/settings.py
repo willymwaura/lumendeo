@@ -86,7 +86,7 @@ DATABASES = {
         
     }
 }
-#DATABASE_URL = os.getenv('DB_URL')
+#DATABASE_URL = 'postgresql://postgres:RhegLImGJrFtUhEvBJtsEOuRuvWmCDwe@ballast.proxy.rlwy.net:49109/railway'
 
 #import dj_database_url
 #DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=1800)
