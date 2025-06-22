@@ -90,7 +90,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px;
-            flex-direction: row; /* Ensure row direction for desktop */
+            flex-direction: row;
         }
 
         /* Text content section */
@@ -101,7 +101,7 @@
             flex-direction: column;
             align-items: flex-start;
             margin-left: 5%;
-            order: 1; /* Make text content appear first (left side) */
+            order: 1;
         }
 
         .logo {
@@ -118,6 +118,7 @@
             text-align: left;
             word-break: break-word;
             margin-bottom: 15px;
+            padding-right: 20px;
         }
 
         .video-description span {
@@ -142,7 +143,7 @@
             justify-content: center;
             max-width: 60%;
             margin-right: 5%;
-            order: 2; /* Make video section appear second (right side) */
+            order: 2;
         }
 
         .video-title {
@@ -163,9 +164,7 @@
         .video-thumbnail {
             width: 100%;
             height: 65vh;
-
             background-size: cover;
-          
             position: relative;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
@@ -179,8 +178,6 @@
         .video-player {
             width: 100%;
             height: 65vh;
-           
-           
             display: none;
         }
 
@@ -203,7 +200,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            margin-top: 125px; /* Half of the desired 250px offset */
+            margin-top: 125px;
         }
 
         .play-button i {
@@ -259,7 +256,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-            
         }
 
         .pay-now-btn:hover {
@@ -494,63 +490,67 @@
         @media (max-width: 1200px) {
             .main-content {
                 flex-direction: column;
-                padding: 20px;
+                padding: 10px;
+                min-height: 100vh;
+                justify-content: space-evenly;
             }
 
             .text-content {
                 flex: none;
                 width: 100%;
                 order: 2;
-                padding: 20px 0;
-                align-items: center;
+                padding: 10px 0;
                 margin-left: 0;
                 text-align: center;
-                display: flex;
-                flex-direction: column;
+                margin-top: -30px;
+                align-items: center;
             }
 
             .video-section {
                 order: 1;
                 width: 100%;
                 max-width: 100%;
-                margin-bottom: 30px;
+                margin-bottom: 10px;
                 margin-right: 0;
+                padding-top: 10px;
             }
 
             .video-thumbnail, .video-player {
                 width: 100%;
-                height: 50vh;
+                height: 40vh;
             }
 
-            /* Hide logo in text-content on mobile */
+            .video-title {
+                margin-bottom: 10px;
+            }
+
+            .mobile-logo-container {
+                margin-bottom: 10px;
+            }
+
             .text-content .logo {
                 display: none;
             }
         }
 
         @media (max-width: 768px) {
-            /* Show mobile logo */
             .mobile-logo-container {
-                display: flex;
-                justify-content: center;
-                margin-bottom: 20px;
-                width: 100%;
-            }
-            
-            .mobile-logo {
-                width: 200px;
-                height: 200px;
-                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+                margin-bottom: 5px;
             }
 
-            .video-title {
-                font-size: 28px;
-                margin-bottom: 20px;
+            .video-thumbnail, .video-player {
+                height: 35vh;
+            }
+
+            .play-button {
+                margin-top: 30px;
+                padding: 10px 20px;
+                font-size: 14px;
             }
 
             .video-description {
-                font-size: 15px;
-                margin-top: 20px;
+                margin-top: 10px;
+                padding: 0 15px;
                 text-align: center;
             }
 
@@ -559,53 +559,41 @@
                 margin-right: 5px;
             }
 
-            .video-thumbnail, .video-player {
-                height: 40vh;
-            }
-
-            .play-button {
-                padding: 6px 12px;
-                font-size: 10px;
-                margin-top: 50px; /* Adjusted for smaller screens */
-            }
-
-            .payment-cta-title {
-                font-size: 20px;
+            .video-duration {
+                margin-top: 10px;
             }
         }
 
         @media (max-width: 480px) {
-            body, html {
-                overflow-y: auto;
-            }
-            
-            .mobile-logo {
-                width: 200px;
-                height: 200px;
-            }
-
-            .video-title {
-                font-size: 24px;
-            }
-
-            .video-description {
-                font-size: 14px;
+            .main-content {
+                padding: 5px;
             }
 
             .video-thumbnail, .video-player {
-                height: 35vh;
+                height: 30vh;
             }
 
             .play-button {
-                margin-top: 55px; /* Further adjusted for very small screens */
+                margin-top: 25px;
+                padding: 8px 16px;
+                font-size: 12px;
             }
 
-            .payment-cta-title {
-                font-size: 18px;
+            .mobile-logo {
+                width: 150px;
+                height: 150px;
             }
 
-            .payment-cta-subtitle {
-                font-size: 14px;
+            .video-title {
+                font-size: 22px;
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Desktop text alignment */
+        @media (min-width: 1201px) {
+            .text-content {
+                padding-left: 5%;
             }
         }
     </style>
