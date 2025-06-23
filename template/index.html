@@ -513,8 +513,7 @@
                 order: 1;
                 width: 100%;
                 max-width: 100%;
-                margin-bottom: 30px;
-                margin-right: 0;
+            
             }
 
             .video-thumbnail, .video-player {
@@ -528,59 +527,130 @@
             }
         }
 
-   @media (max-width: 768px) {
-            /* Show mobile logo */
-            .container{
-                     align-items: center;
-                   
-            }
-            .mobile-logo-container {
-                display: flex;
-                justify-content: center;
-                margin-bottom: -40px;
-                margin-top: -30px;
-                width: 100%;
-            }
-            
-            .mobile-logo {
-                width: 150px;
-                height: 150px;
-                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
-            }
+  @media (max-width: 768px) {
+    .container {
+        align-items: center;
+        padding: 0;
+        margin: 0;
+    }
 
-            .video-title {
-                font-size: 20px;
-                margin-bottom: 10px;
-            }
+    .mobile-logo-container {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        width: 100%;
+        height: 200px !important;
+        margin-bottom: 10px;
+    }
 
-            .video-description {
-                font-size: 15px;
-                margin-top: -25px;
-                text-align: center;
-            }
+    .mobile-logo {
+        width: 200px;
+        height: 200px;
+        filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+    }
 
-            .video-description span {
-                display: inline;
-                margin-right: 5px;
-            }
+    .video-title {
+        font-size: 18px;
+        margin: 0;
+        text-align: center;
+        height: 30px;
+    }
 
-            .video-thumbnail, .video-player {
-                height: 40vh;
-                
-           
-            }
+    .video-container {
+        margin: 0;
+        padding: 0;
+    }
+    .video-section{
+        margin: 0;
+        padding: 0;
+        border: 0;
+        margin-top: -230px; 
+          position: relative;
+    z-index: 1;
+        
+    }
 
-            .play-button {
-                padding: 6px 12px;
-                font-size: 10px;
-                margin-top: 80px; /* Adjusted for smaller screens */
-            }
+    .video-thumbnail, .video-player {
+        height: 250px;
+        margin: 0 auto;
+        padding: 0;
+    }
 
-            .payment-cta-title {
-                font-size: 20px;
-            }
-        }
+    .thumbnail-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
 
+    .play-button {
+        padding: 10px 10px;
+        font-size: 12px;
+        margin: 60px auto 0 auto;
+        display: block;
+    }
+
+    .payment-cta {
+        margin: 10px auto 0 auto;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .payment-cta-title {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .payment-cta-subtitle {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+
+    .mpesa-logo {
+        max-width: 100px;
+        height: auto;
+        margin: 5px 0;
+    }
+
+    .pay-now-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
+    .text-content {
+        margin: 0 0 0 0;
+        padding: 0;
+         top: -190px; 
+           position: relative;
+    z-index: 1;
+        
+       
+    }
+
+    .desktop-logo {
+        display: none; /* hide on mobile */
+    }
+
+    .video-description {
+        font-size: 14px;
+        text-align: center;
+           margin-top: 0;
+    padding-top: 0;
+    }
+
+    .video-description span {
+        display: inline;
+        margin-right: 3px;
+       
+    }
+
+    .video-duration {
+        font-size: 12px;
+        text-align: center;
+        margin: 4px 0;
+    }
+}
 
     </style>
 </head>
@@ -605,7 +675,7 @@
   src="{{ thumbnail_url }}" 
   alt="Thumbnail" 
   class="thumbnail-image" 
-  style="display: block; max-width: 95%; height: auto; margin: 0 auto;  margin-right: 20px;" 
+  style="display: block; max-width: 95%; height: 100%; margin: 0 auto;  margin-right: 10px;" 
 />
       <button class="play-button" id="playButton">
         PLAY  <i class="fas fa-play"></i> 
